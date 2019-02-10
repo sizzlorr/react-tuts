@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
+import styles from './App.css';
 import Person from './Person/Person';
+import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
 
 class App extends Component {
     state = {
@@ -55,51 +57,42 @@ class App extends Component {
     };
 
     render() {
-        const style = {
-            backgroundColor: 'green',
-            font: 'inherit',
-            border: 'solid 1px orangered',
-            padding: '4px 8px',
-            textTransform: 'uppercase',
-            cursor: 'pointer',
-            color: '#fff',
-            borderRadius: '8px'
-        };
-
         let persons = null;
+        let btnClass = '';
 
         if (this.state.showPersons) {
            persons = (
                <div>
                    {this.state.persons.map((person, index) => {
-                       return <Person
-                           name={person.name}
-                           age={person.age}
-                           click={this.deletePersonHandler.bind(this, index)}
-                           key={person.id}
-                           changed={(event) => this.nameChangeHandler(event, person.id)} />
+                       return <ErrorBoundary key={person.id}>
+                           <Person
+                               name={person.name}
+                               age={person.age}
+                               click={this.deletePersonHandler.bind(this, index)}
+                               changed={(event) => this.nameChangeHandler(event, person.id)} />
+                       </ErrorBoundary>
                    })}
                </div>
            );
-
-           style.backgroundColor = 'red';
         }
 
         let classes = [];
         if (this.state.persons.length <=2) {
-            classes.push('red');
+            classes.push(styles.red);
         }
         if (this.state.persons.length <=1) {
-            classes.push('bold');
+            classes.push(styles.bold);
         }
 
+        btnClass = styles.Red;
+
         return (
-            <div className="App">
-                <header className="App-header">
+            <div className={styles.App}>
+                <header>
                     <h1>Toggle persons</h1>
                     <p className={classes.join(' ')}>Some sentence</p>
                 </header>
-                <button onClick={this.togglePersonsHandler} style={style}>
+                <button onClick={this.togglePersonsHandler} className = {btnClass}>
                     Switch name
                 </button>
                 {persons}
